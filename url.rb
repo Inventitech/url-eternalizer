@@ -36,15 +36,23 @@ rescue => e
   return nil
 end
 
+# URL validation from Wilhelm Murdoch, https://stackoverflow.com/questions/1805761/how-to-check-if-a-url-is-valid
+String.class_eval do
+  def is_valid_url?
+    uri = URI.parse self
+    uri.kind_of? URI::HTTP
+  rescue URI::InvalidURIError
+    false
+  end
+end
+
+# Archives the given URI on the Internet Archive and returns its persisted URI, if successful.
+# Returns nil otherwise.
 def archive_url(uri_to_archive)
   puts "Archiving #{uri_to_archive} ..."
-  begin
-    # Ensure this is a valid URI at all
-    uri = URI.parse(uri_to_archive)
-  rescue URI::InvalidURIError => e
-    puts e
-    puts "#{uri_to_archive} is not a valid URL!"
-    return
+  unless uri_to_archive.is_valid_url?
+    puts "Not a valid URL"
+    return nil
   end
 
   archived_url = do_archive_url(uri_to_archive)
@@ -52,16 +60,16 @@ def archive_url(uri_to_archive)
 
   if archived_url.nil? and archived_latest_time.nil?
     archived_url = nil
-    puts "Sorry, archiving #{uri_to_archive} did not work."
   elsif archived_url.nil?
     archived_url = @archive_url_base + @archive_url_part_web + archived_latest_time + '/' + uri_to_archive
-    puts "Archiving #{uri_to_archive} likely did not work. The best we could do was #{archived_url}"
+    puts "Archiving #{uri_to_archive} likely did not work. The best we could do was #{archived_url}." if archived_url.is_valid_url?
   elsif archived_url.include? (archived_latest_time.to_s)
-    puts "Congratulations, the save operation for #{uri_to_archive} to #{archived_url} worked!"
+    puts "Congratulations, the save operation for #{uri_to_archive} to #{archived_url} worked!" if archived_url.is_valid_url?
   else
-    puts "Congratulations, the save operation for #{uri_to_archive} to #{archived_url} worked!"
+    puts "Congratulations, the save operation for #{uri_to_archive} to #{archived_url} worked!" if archived_url.is_valid_url?
   end
 
+  puts "Sorry, archiving #{uri_to_archive} did not work." unless archived_url.is_valid_url?
   return archived_url
 end
 
