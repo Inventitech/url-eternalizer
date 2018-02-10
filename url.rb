@@ -28,8 +28,9 @@ def extract_saved_url(html)
 end
 
 def extract_latest_version_api(uri_to_archive)
-  wb = Wayback.list(uri_to_archive)
-  wb.dates.keys.sort.last
+  wb = Wayback.page(uri_to_archive, :latest)
+  date = wb.id.scan(/(\d{14,14})/).first.first
+  date
 rescue => e
   puts e.backtrace
   return nil
@@ -53,10 +54,12 @@ def archive_url(uri_to_archive)
     archived_url = nil
     puts "Sorry, archiving #{uri_to_archive} did not work."
   elsif archived_url.nil?
-    archived_url = @archive_url_base + @archive_url_part_web + archived_latest_time
+    archived_url = @archive_url_base + @archive_url_part_web + archived_latest_time + '/' + uri_to_archive
     puts "Archiving #{uri_to_archive} likely did not work. The best we could do was #{archived_url}"
   elsif archived_url.include? (archived_latest_time.to_s)
-    puts "Congratulations, the save operation for #{uri_to_archive} to #{archived_url} definitely worked!"
+    puts "Congratulations, the save operation for #{uri_to_archive} to #{archived_url} worked!"
+  else
+    puts "Congratulations, the save operation for #{uri_to_archive} to #{archived_url} worked!"
   end
 
   return archived_url
