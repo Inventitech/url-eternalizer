@@ -4,4 +4,4 @@ if ARGV.length < 1 || ARGV.length > 1
   abort("usage: eternalize_urls FILE")
 end
 
-archive_file(ARGV[0])
+puts archive_file(ARGV[0])

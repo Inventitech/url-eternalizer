@@ -12,6 +12,7 @@ include Twitter::TwitterText::Extractor
 @verbose = false
 
 def extract_urls_from_file(file)
+  @content = ''
   urls = Set.new
   File.open(file, 'r') do |f|
     f.each_line do |line|
@@ -52,8 +53,10 @@ def archive_urls(urls)
 end
 
 def archive_file(file)
-  is_latex = file.end_with? ".tex"
+  is_latex = file.end_with? '.tex'
   urls = extract_urls_from_file(file)
+  return @content if urls.empty?
+
   archived_urls = archive_urls(urls)
   archived_urls.keys.each do |url|
     next if archived_urls[url].nil?
@@ -65,5 +68,5 @@ def archive_file(file)
   end
 
   STDERR.puts 'Add this to your .tex: \newcommand{\ahref}[2]{\href{#1}{\nolinkurl{#2}}}' if is_latex
-  puts @content
+  @content
 end
