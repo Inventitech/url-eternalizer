@@ -3,3 +3,4 @@
 [![Build Status](https://travis-ci.org/Inventitech/latex-url-eternalizer.svg?branch=master)](https://travis-ci.org/Inventitech/latex-url-eternalizer)
 
 This gem automatically archives URLs on Archive.org and replaces the original URL with the archived URL.
+While it can work on any text file, it is optimized for LaTeX.

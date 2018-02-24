@@ -11,15 +11,29 @@ include Twitter::TwitterText::Extractor
 @content = ''
 @verbose = false
 
-def extract_urls_from_file(file)
-  @content = ''
+def remove_and_replace_ahrefs
+  ahrefs = @content.scan(/\\ahref{.+?}{.+?}/)
+  i = 0
+  ahrefs.each do |ahref|
+    @content.sub! ahref, "\\ahref{#{i}}"
+    i += 1
+  end
+  ahrefs
+end
+
+def reinsert_ahrefs(ahrefs)
+  i = 0
+  ahrefs.each do |ahref|
+    @content.sub! "\\ahref{#{i}}", ahref
+    i += 1
+  end
+end
+
+def extract_urls_from_file(is_latex)
   urls = Set.new
-  File.open(file, 'r') do |f|
-    f.each_line do |line|
-      extract_urls line do |url|
-        urls.add url unless url.include? 'archive.org'
-      end
-      @content += line
+  @content.each_line do |line|
+    extract_urls line do |url|
+      urls.add url unless url.include? 'archive.org'
     end
   end
 
@@ -54,8 +68,11 @@ def archive_urls(urls)
 end
 
 def archive_file(file)
+  @content = File.read(file)
+
   is_latex = file.end_with? '.tex'
-  urls = extract_urls_from_file(file)
+  ahrefs = remove_and_replace_ahrefs if is_latex
+  urls = extract_urls_from_file(is_latex)
   return @content if urls.empty?
 
   archived_urls = archive_urls(urls)
@@ -67,6 +84,8 @@ def archive_file(file)
         @content.gsub! /^[^\/]*#{url}/, archived_urls[url]
     end
   end
+
+  reinsert_ahrefs ahrefs if is_latex
 
   STDERR.puts 'Add this to your .tex: \newcommand{\ahref}[2]{\href{#1}{\nolinkurl{#2}}}' if is_latex
   @content

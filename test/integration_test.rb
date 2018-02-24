@@ -31,4 +31,10 @@ class IntegrationTest < Test::Unit::TestCase
 
     assert_equal(2, result.scan(/archive.org/).length)
   end
+
+  def test_integration_test_same_existing_mixed_urls_tex
+    result = archive_file('test/rsrc_same_existing_mixed_urls.tex')
+
+    assert_equal(3, result.scan(/archive.org/).length)
+  end
 end
