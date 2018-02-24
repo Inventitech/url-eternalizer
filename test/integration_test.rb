@@ -13,6 +13,7 @@ class IntegrationTest < Test::Unit::TestCase
   def test_integration_test_complex_file
     result = archive_file('test/complex_integration.tex')
     puts result
+
     assert_false(result.nil?)
     assert_true(result.include?('archive.org') && result.include?('google.de'))
     assert_true(result.include?('http://doesnotexistaifjdoasfjfsd.com'))
