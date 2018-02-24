@@ -16,7 +16,7 @@ def extract_urls_from_file(file)
   File.open(file, 'r') do |f|
     f.each_line do |line|
       extract_urls line do |url|
-        urls.add url
+        urls.add url unless url.include? 'archive.org'
       end
       @content += line
     end
