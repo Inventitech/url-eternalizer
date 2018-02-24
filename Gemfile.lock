@@ -1,7 +1,6 @@
 GIT
   remote: https://github.com/inventitech/wayback_gem.git
   revision: 230c67f935d20e4bf059099f0397eb7135a12fc3
-  submodules: true
   specs:
     wayback (0.3.4)
       faraday

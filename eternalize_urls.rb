@@ -9,6 +9,7 @@ require 'set'
 include Twitter::TwitterText::Extractor
 
 @content = ''
+@verbose = false
 
 def extract_urls_from_file(file)
   urls = Set.new
@@ -39,7 +40,9 @@ def archive_urls(urls)
   WaybackArchiver.archive(urls.flatten.to_a, strategy: :urls) do |result|
     if result.success?
       archived_url = extract_latest_version_api(result.archived_url)
-      STDERR.puts "Successfully archived: #{archived_url}"
+      next if archived_url.nil?
+
+      STDERR.puts "Successfully archived: #{archived_url}" if @verbose
       urls_to_archived_url[result.archived_url] = archived_url
     else
       STDERR.puts "Error (HTTP #{result.code}) when archiving: #{result.archived_url}"
@@ -49,11 +52,19 @@ def archive_urls(urls)
 end
 
 def archive_file(file)
+  is_latex = file.end_with? ".tex"
   urls = extract_urls_from_file(file)
   archived_urls = archive_urls(urls)
   archived_urls.keys.each do |url|
-    @content.gsub! url, archived_urls[url]
+    next if archived_urls[url].nil?
+    if is_latex
+        @content.gsub! url, "\\ahref{#{archived_urls[url]}}{#{url}}"
+      else
+        @content.gsub! url, archived_urls[url]
+    end
   end
+
+  STDERR.puts 'Add this to your .tex: \newcommand{\ahref}[2]{\href{#1}{\nolinkurl{#2}}}' if is_latex
   puts @content
 end
 
