@@ -67,9 +67,3 @@ def archive_file(file)
   STDERR.puts 'Add this to your .tex: \newcommand{\ahref}[2]{\href{#1}{\nolinkurl{#2}}}' if is_latex
   puts @content
 end
-
-if ARGV.length < 1 || ARGV.length > 1
-  abort("usage: eternalize_urls FILE")
-end
-
-archive_file(ARGV[0])
