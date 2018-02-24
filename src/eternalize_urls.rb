@@ -49,6 +49,7 @@ def archive_urls(urls)
       STDERR.puts "Error (HTTP #{result.code}) when archiving: #{result.archived_url}"
     end
   end
+
   urls_to_archived_url
 end
 
@@ -63,7 +64,7 @@ def archive_file(file)
     if is_latex
         @content.gsub! url, "\\ahref{#{archived_urls[url]}}{#{url}}"
       else
-        @content.gsub! url, archived_urls[url]
+        @content.gsub! /^[^\/]*#{url}/, archived_urls[url]
     end
   end
 
