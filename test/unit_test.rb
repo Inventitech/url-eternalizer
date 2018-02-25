@@ -3,12 +3,16 @@ require "test/unit"
 require_relative "../src/eternalize_urls"
 
 class UnitTests < Test::Unit::TestCase
-  def test_eternalize_google
+  def test_archive_urls_google
     assert_includes(archive_urls({'http://www.google.com'=>'http://url0.replace'}).values[0], 'web.archive.org/web/')
   end
 
-  def test_blocked_but_available_url
+  def test_archive_blocked_but_available_url
     assert_not_nil(archive_urls({'https://archive.org/web/'=>'http://url0.replace'}))
+  end
+
+  def test_archive_pure
+    assert_nil(archive_urls({'https://pure.tudelft.nl/portal/files/38319277/TSE2776152.pdf'=>'http://url0.replace'}))
   end
 
   def test_extract_urls_from_file
