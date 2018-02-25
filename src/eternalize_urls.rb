@@ -50,8 +50,7 @@ end
 
 def reinsert_urls(urls_to_placeholder, archived_urls, is_latex)
   urls_to_placeholder.keys.each do |url|
-    replace_url = url
-    replace_url = archived_urls[url] if !archived_urls[url].nil?
+    archived_urls[url].nil? ? replace_url = url : replace_url = archived_urls[url]
 
     if is_latex && !archived_urls[url].nil?
       replace_url = "\\ahref{#{archived_urls[url]}}{#{url}}"
