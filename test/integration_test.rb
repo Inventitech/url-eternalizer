@@ -4,6 +4,16 @@ require_relative "../src/eternalize_urls"
 
 # These are a set of long-running integration tests
 class IntegrationTest < Test::Unit::TestCase
+  def file_does_not_exist
+    result = archive_file('test/DOES_NOT_EXIST')
+    assert_nil(result)
+  end
+
+  def test_empty
+    result = archive_file('test/rsrc_empty.txt')
+    assert_equal('', result)
+  end
+
   def test_integration_test
     result = archive_file('test/rsrc_google_url.txt')
     archived = !result.nil? && (result.include?('archive.org') && result.include?('google.com'))
@@ -22,19 +32,25 @@ class IntegrationTest < Test::Unit::TestCase
 
   def test_integration_test_different_existing_mixed_urls
     result = archive_file('test/rsrc_different_existing_mixed_urls.txt')
-
     assert_equal(2, result.scan(/archive.org/).length)
   end
 
   def test_integration_test_same_existing_mixed_urls
     result = archive_file('test/rsrc_same_existing_mixed_urls.txt')
-
     assert_equal(2, result.scan(/archive.org/).length)
   end
 
   def test_integration_test_same_existing_mixed_urls_tex
     result = archive_file('test/rsrc_same_existing_mixed_urls.tex')
-
+    puts result
     assert_equal(3, result.scan(/archive.org/).length)
+  end
+
+  def test_transfer_embedded_urls
+    result = archive_file('test/rsrc_transfer_embedded_urls.tex')
+    puts result
+    assert_equal(2, result.scan(/archive.org/).length)
+    assert_equal(0, result.scan(/\\url/).length)
+    assert_equal(0, result.scan(/\\href/).length)
   end
 end
