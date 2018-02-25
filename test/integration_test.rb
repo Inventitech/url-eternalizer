@@ -37,6 +37,7 @@ class IntegrationTest < Test::Unit::TestCase
 
   def test_integration_test_same_existing_mixed_urls
     result = archive_file('test/rsrc_same_existing_mixed_urls.txt')
+    puts result
     assert_equal(2, result.scan(/archive.org/).length)
   end
 
@@ -55,5 +56,10 @@ class IntegrationTest < Test::Unit::TestCase
   def test_urls_newlines
     result = archive_file('test/rsrc_urls_newlines.txt')
     assert_equal(3, result.scan(/archive.org/).length)
+  end
+
+  def test_unarchivable_url
+    result = archive_file('test/rsrc_unarchivable_url.tex')
+    assert_equal('\url{goo.gl/baE8Q4}', result)
   end
 end
