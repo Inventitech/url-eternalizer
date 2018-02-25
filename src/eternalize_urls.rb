@@ -98,14 +98,16 @@ def archive_file(file)
   end
   return @content if @content.nil? || @content.empty?
 
-  is_latex = file.end_with? '.tex'
+  is_latex = file.end_with?(".tex",".bib")
   ahrefs = remove_and_replace_ahrefs if is_latex
   urls_to_placeholder = extract_urls_from_file
   urls_to_archived_urls = archive_urls(urls_to_placeholder)
   reinsert_urls urls_to_placeholder, urls_to_archived_urls, is_latex
 
-  reinsert_ahrefs ahrefs if is_latex
+  if is_latex
+    reinsert_ahrefs ahrefs
+    STDERR.puts 'Add this to your .tex: \newcommand{\ahref}[2]{\href{#1}{\nolinkurl{#2}}}'
+  end
 
-  STDERR.puts 'Add this to your .tex: \newcommand{\ahref}[2]{\href{#1}{\nolinkurl{#2}}}' if is_latex
   @content
 end
