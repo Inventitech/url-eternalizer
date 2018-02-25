@@ -62,7 +62,7 @@ def reinsert_urls(urls_to_placeholder, archived_urls, is_latex)
 end
 
 def extract_latest_version_api(uri_to_archive)
-    wb = Wayback.page(uri_to_archive, :latest)
+  wb = Wayback.page(uri_to_archive, :latest)
   wb.id
 rescue => e
   STDERR.puts "Error (Could not retrieve) when archiving: #{uri_to_archive}"

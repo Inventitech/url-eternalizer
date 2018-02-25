@@ -21,15 +21,15 @@ class UnitTests < Test::Unit::TestCase
     assert_equal(expected_content, @content)
   end
 
-  # def test_extract_urls_at_line_begin
-  #   @content = 'http://www.google.de\nhttp://google.com\nhttp://www.google.de'
-  #   urls = extract_urls_from_file
-  #   expected_urls = {"http://www.google.de"=>"http://url0.replace", "http://google.com"=>"http://url1.replace"}
-  #   expected_content = 'http://url0.replace\n http://url1.replace http://url0.replace'
-  #
-  #   assert_equal(expected_urls, urls)
-  #   assert_equal(expected_content, @content)
-  # end
+  def test_extract_urls_at_line_begin
+    @content = 'http://www.google.de\nhttp://google.com\nhttp://www.google.de'
+    urls = extract_urls_from_file
+    expected_urls = {"http://www.google.de"=>"http://url0.replace", "http://google.com"=>"http://url1.replace"}
+    expected_content = 'http://url0.replace\n http://url1.replace http://url0.replace'
+
+    assert_equal(expected_urls, urls)
+    assert_equal(expected_content, @content)
+  end
 
 end
 

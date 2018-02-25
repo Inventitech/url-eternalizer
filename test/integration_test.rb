@@ -42,15 +42,18 @@ class IntegrationTest < Test::Unit::TestCase
 
   def test_integration_test_same_existing_mixed_urls_tex
     result = archive_file('test/rsrc_same_existing_mixed_urls.tex')
-    puts result
     assert_equal(3, result.scan(/archive.org/).length)
   end
 
   def test_transfer_embedded_urls
     result = archive_file('test/rsrc_transfer_embedded_urls.tex')
-    puts result
     assert_equal(2, result.scan(/archive.org/).length)
     assert_equal(0, result.scan(/\\url/).length)
     assert_equal(0, result.scan(/\\href/).length)
+  end
+
+  def test_urls_newlines
+    result = archive_file('test/rsrc_urls_newlines.txt')
+    assert_equal(3, result.scan(/archive.org/).length)
   end
 end
