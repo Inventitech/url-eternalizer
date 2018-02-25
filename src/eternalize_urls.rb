@@ -3,10 +3,13 @@ require 'bundler/setup'
 
 require 'twitter-text'
 require 'wayback_archiver'
-require 'wayback'
-require 'set'
+require 'wayback_machine_downloader'
 
 include Twitter::TwitterText::Extractor
+
+# Possible alternatives for the future would be Perma.cc and Archive.is
+ARCHIVE_URL_BASE = 'https://web.archive.org'
+ARCHIVE_URL_PART_WEB = '/web/'
 
 @content = ''
 @verbose = false
@@ -64,8 +67,10 @@ def reinsert_urls(urls_to_placeholder, archived_urls, is_latex)
 end
 
 def extract_latest_version_api(uri_to_archive)
-  wb = Wayback.page(uri_to_archive, :latest)
-  wb.id
+  options = {:maximum_pages => 1, :list => true, :base_url => uri_to_archive}
+  wayback_machine_downloader = WaybackMachineDownloader.new options
+  archived_url = wayback_machine_downloader.get_file_list_by_timestamp.first
+  "#{ARCHIVE_URL_BASE}#{ARCHIVE_URL_PART_WEB}#{archived_url[:timestamp]}/#{archived_url[:file_url]}"
 rescue => e
   STDERR.puts "Error (Could not retrieve) when archiving: #{uri_to_archive}"
   return nil

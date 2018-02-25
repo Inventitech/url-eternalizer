@@ -12,7 +12,7 @@ class UnitTests < Test::Unit::TestCase
   end
 
   def test_archive_pure
-    assert_nil(archive_urls({'https://pure.tudelft.nl/portal/files/38319277/TSE2776152.pdf'=>'http://url0.replace'}))
+    assert_includes(archive_urls({'https://pure.tudelft.nl/portal/files/38319277/TSE2776152.pdf'=>'http://url0.replace'}).values[0], 'web.archive.org/web')
   end
 
   def test_extract_urls_from_file

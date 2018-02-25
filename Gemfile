@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'wayback', '~> 0.3.1', :git => 'https://github.com/inventitech/wayback_gem.git'
+gem 'wayback_machine_downloader'
 gem 'twitter-text', '~> 2.1'
 gem 'wayback_archiver'
 
