@@ -15,6 +15,10 @@ class UnitTests < Test::Unit::TestCase
     assert_includes(archive_urls({'https://pure.tudelft.nl/portal/files/38319277/TSE2776152.pdf'=>'http://url0.replace'}).values[0], 'web.archive.org/web')
   end
 
+  def test_cannot_archive_doi
+    assert_empty(archive_urls({'https://doi.org/10.1007/s10664-016-9489-6'=>'http://url0.replace'}), 'web.archive.org/web')
+  end
+
   def test_extract_urls_from_file
     @content = 'http://www.google.de\n http://google.com http://www.google.de'
     urls = extract_urls_from_file
