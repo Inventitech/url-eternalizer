@@ -12,7 +12,9 @@ lifetime than the average blog post. Archiving URLs manually is a tedious proces
 
 ## What it does
 
-For example,
+URL Eternalizer can work on any ASCII text, but has a special mode for LaTeX. Once a link has been archived, it will be left untouched. Thus, you can run URL Eternalizer continuously on your files. In the following we will give two examples of what it does.
+
+### Plain Text
 
 ```
 Go to www.google.com.
@@ -24,7 +26,29 @@ will be translated to
 Go to http://web.archive.org/web/20180225115649/http://www.google.com/.
 ```
 
-For LaTeX documents, it inserts a special marker with a separate link target and text.
+### LaTeX documents
+
+For LaTeX documents, URL Eternalizer inserts a special marker with a separate link target and text.
+
+```
+Go to \url{www.google.com}.
+```
+
+will be translated to
+
+```
+Go to \ahref{http://web.archive.org/web/20180225115649/http://www.google.com/}{www.google.com}.
+```
+
+`\ahref` is a newly defined command that has the second part argument as the link text, and the first part as the link target. The link in the example above will appear as
+[www.google.com](http://web.archive.org/web/20180225115649/http://www.google.com/) in PDF.
+
+`\ahref` is defined as:
+
+```
+\newcommand{\ahref}[2]{\href{#1}{\nolinkurl{#2}}}
+```
+
 
 ## How to call
 
